@@ -1,0 +1,81 @@
+<body></body>
+
+    <h1>Empathy Ranking Form</h1>
+    <h4>Please rank each response in order of most to least empathetic</h4>
+    <form action="https://api.web3forms.com/submit" method="post">
+        <input type="hidden" name="access_key" value="0bede88b-9799-4317-9c57-a48498a4699a">
+        <!-- Question 1 -->
+        <div class="question">
+            <p>1. How would you comfort someone who just lost their job?</p>
+            <label>Response 1: "I'm so sorry to hear that. Let me know if there's anything I can do to help."</label><br>
+            <select name="question1_response1">
+                <option value="1">1 (Most Empathetic)</option>
+                <option value="2">2</option>
+                <option value="3">3 (Least Empathetic)</option>
+            </select><br>
+
+            <label>Response 2: "That must be really tough. I’m here for you."</label><br>
+            <select name="question1_response2">
+                <option value="1">1 (Most Empathetic)</option>
+                <option value="2">2</option>
+                <option value="3">3 (Least Empathetic)</option>
+            </select><br>
+
+            <label>Response 3: "You'll find something else soon, don't worry."</label><br>
+            <select name="question1_response3">
+                <option value="1">1 (Most Empathetic)</option>
+                <option value="2">2</option>
+                <option value="3">3 (Least Empathetic)</option>
+            </select>
+        </div>
+
+
+        <button type="submit">Submit</button>
+    </for>
+
+    <div class="thank-you-message" id="thankYouMessage" style="display: none;">
+        <h1>Thank You!</h1>
+        <p>Your response has been recorded. Thank you for completing the survey.</p>
+    </div>
+
+    <script>
+        document.querySelectorAll('.question').forEach(question => {
+            const selects = question.querySelectorAll('select');
+
+            selects.forEach(select => {
+                select.addEventListener('change', () => {
+                    const values = Array.from(selects).map(s => s.value);
+                    const uniqueValues = [...new Set(values.filter(v => v !== ""))];
+                    let valid = true;
+
+                    if (values.filter(v => v === "").length > 0) {
+                        valid = false; // If any select is empty, mark as invalid
+                    }
+
+                    selects.forEach(s => {
+                        if (values.filter(v => v === s.value).length > 1) {
+                            s.setCustomValidity('Each response must have a unique ranking.');
+                            valid = false;
+                        } else {
+                            s.setCustomValidity('');
+                        }
+                    });
+
+                    // Update the validity of the form based on this question's selects
+                    question.setAttribute('data-valid', valid);
+                });
+            });
+        });
+
+        document.querySelector("form").addEventListener("submit", function (event) {
+            // Check if all questions are valid before submission
+            const allValid = Array.from(document.querySelectorAll('.question')).every(q => q.getAttribute('data-valid') === 'true');
+
+            if (!allValid) {
+                event.preventDefault(); // Stop form submission if any question is invalid
+                alert("Please ensure all rankings are unique and all selections are made.");
+            }
+        });
+    </script>
+
+</body>
