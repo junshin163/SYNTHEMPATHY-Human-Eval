@@ -92,17 +92,27 @@
             event.preventDefault(); // Prevent the default form submission
 
             const selects = document.querySelectorAll('.response-select');
-            const uniqueRanks = new Set();
             let isValid = true;
 
-            // Check for unique ranks
+            // Create an object to track ranks for each question
+            const rankTracker = {};
+
+            // Check for unique ranks within each question
             selects.forEach(select => {
+                const questionName = select.name;
                 const value = select.value;
+
                 if (value) {
-                    if (uniqueRanks.has(value)) {
-                        isValid = false; // Found a duplicate rank
+                    // Initialize rankTracker for the current question if it doesn't exist
+                    if (!rankTracker[questionName]) {
+                        rankTracker[questionName] = new Set();
+                    }
+
+                    // Check if the value is already in the set for this question
+                    if (rankTracker[questionName].has(value)) {
+                        isValid = false; // Found a duplicate rank for this question
                     } else {
-                        uniqueRanks.add(value);
+                        rankTracker[questionName].add(value); // Add the rank to the set
                     }
                 }
             });
