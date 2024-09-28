@@ -102,12 +102,15 @@
                 const questionName = select.name;
                 const value = select.value;
 
-                if (value) {
-                    // Initialize rankTracker for the current question if it doesn't exist
-                    if (!rankTracker[questionName]) {
-                        rankTracker[questionName] = new Set();
-                    }
+                // Initialize rankTracker for the current question if it doesn't exist
+                if (!rankTracker[questionName]) {
+                    rankTracker[questionName] = new Set();
+                }
 
+                // Check if the value is empty (indicating that the question was not ranked)
+                if (value === "") {
+                    isValid = false; // Not all questions have been ranked
+                } else {
                     // Check if the value is already in the set for this question
                     if (rankTracker[questionName].has(value)) {
                         isValid = false; // Found a duplicate rank for this question
@@ -124,7 +127,7 @@
                 document.getElementById('empathyForm').style.display = 'none';
                 document.getElementById('thankYouMessage').style.display = 'block';
             } else {
-                alert('Please select unique ranks for each question.');
+                alert('Please ensure all questions are ranked uniquely and that all questions have been ranked.');
             }
         }
 
