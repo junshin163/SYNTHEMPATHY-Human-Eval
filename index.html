@@ -9,7 +9,8 @@
 </head>
 <body>
     <h1>Empathy Ranking Form</h1>
-    <h4>Please rank each response in order of most to least empathetic</h4>
+    <h4>Below are different responses to someone sharing their stories, feelings and experiences with a chatbot.</h4>
+    <h4>You will see 3 responses in each set. Please compare these responses and rank each response from most to least empathetic.</h4>
     <form action="https://api.web3forms.com/submit" method="post">
         <input type="hidden" name="access_key" value="0bede88b-9799-4317-9c57-a48498a4699a">
 
@@ -39,6 +40,14 @@
             });
         }
 
+        // Fisher-Yates Shuffle Algorithm to shuffle an array
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
         // Function to load a variant based on URL parameter
         function loadVariant() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -54,32 +63,38 @@
 
             for (let i = startIndex; i < endIndex && i < prompts.length; i++) {
                 const prompt = prompts[i];
+
+                // Store responses in an array and shuffle them
+                let responses = [
+                    { text: `${prompt.ED_resp}`, name: `question${i + 1}_response_ED` },
+                    { text: `${prompt.EPITOME_resp}`, name: `question${i + 1}_response_EPI` },
+                    { text: `${prompt.SYNTHEMPATHY_resp}`, name: `question${i + 1}_response_SYNEM` }
+                ];
+
+                // Shuffle the responses
+                shuffle(responses);
+
+                // Generate the HTML for the shuffled responses
                 questionHTML += `
                     <div class="question">
-                        <p>${prompt.seeker_post}</p>
-                        <label>Response A: "${prompt.ED_resp}"</label>
-                        <select name="question${i + 1}_response1" class="response-select">
-                            <option value="">Select a rank</option>
-                            <option value="1">1 (Most Empathetic)</option>
-                            <option value="2">2</option>
-                            <option value="3">3 (Least Empathetic)</option>
-                        </select>
-                        <label>Response B: "${prompt.EPITOME_resp}"</label>
-                        <select name="question${i + 1}_response2" class="response-select">
-                            <option value="">Select a rank</option>
-                            <option value="1">1 (Most Empathetic)</option>
-                            <option value="2">2</option>
-                            <option value="3">3 (Least Empathetic)</option>
-                        </select>
-                        <label>Response C: "${prompt.SYNTHEMPATHY_resp}"</label>
-                        <select name="question${i + 1}_response3" class="response-select">
-                            <option value="">Select a rank</option>
-                            <option value="1">1 (Most Empathetic)</option>
-                            <option value="2">2</option>
-                            <option value="3">3 (Least Empathetic)</option>
-                        </select>
-                    </div>
+                        <p>&#x1F9D1;: ${prompt.seeker_post}</p>
                 `;
+                // Loop through the shuffled responses and display them
+                for (let j = 0; j < responses.length; j++) {
+                    const response = responses[j];
+                    // responses.forEach(response => {
+                    questionHTML += `
+                        <label>Response ${j+1}: "${response.text}"</label>
+                        <select name="${response.name}" class="response-select">
+                            <option value="">Select a rank</option>
+                            <option value="1">1 (Most Empathetic)</option>
+                            <option value="2">2</option>
+                            <option value="3">3 (Least Empathetic)</option>
+                        </select>
+                    `;
+                }
+
+            questionHTML += `</div>`;
             }
             questionContainer.innerHTML = questionHTML;
 
