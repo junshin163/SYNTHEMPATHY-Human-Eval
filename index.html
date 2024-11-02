@@ -114,13 +114,16 @@
         // Only display options not slected yet
         function updateDropdowns(select, group) {
             const selectedValue = select.value;
+            const allSelectedValues = Array.from(group.querySelectorAll('.response-select'))
+                                            .map(s => s.value)
+                                            .filter(v => v); // Get all selected values, ignoring empty ones
 
             group.querySelectorAll('.response-select').forEach(otherSelect => {
                 if (otherSelect !== select) {
                     const options = otherSelect.querySelectorAll('option');
                     options.forEach(option => {
                         // Disable the option if it's already selected in another dropdown
-                        option.disabled = selectedValue && option.value === selectedValue;
+                        option.disabled = allSelectedValues.includes(option.value);
                     });
                 }
             });
