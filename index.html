@@ -98,8 +98,32 @@
             }
             questionContainer.innerHTML = questionHTML;
 
+            // Event listener to each dropdown for updating options available
+            const questionGroups = document.querySelectorAll('.question');
+            questionGroups.forEach(group => {
+                const selects = group.querySelectorAll('.response-select');
+                selects.forEach(select => {
+                    select.addEventListener('change', () => updateDropdowns(select, group));
+                });
+            });
+
             // Add event listener to form submission
             document.getElementById('empathyForm').addEventListener('submit', handleFormSubmit);
+        }
+
+        // Only display options not slected yet
+        function updateDropdowns(select, group) {
+            const selectedValue = select.value;
+
+            group.querySelectorAll('.response-select').forEach(otherSelect => {
+                if (otherSelect !== select) {
+                    const options = otherSelect.querySelectorAll('option');
+                    options.forEach(option => {
+                        // Disable the option if it's already selected in another dropdown
+                        option.disabled = selectedValue && option.value === selectedValue;
+                    });
+                }
+            });
         }
 
         // Function to handle form submission
