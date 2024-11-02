@@ -110,21 +110,21 @@
             let isValid = true;
 
             // Check for unique ranks within each question
-            //selects.forEach(group => {
-            //    const selects = group.querySelectorAll('.response-select');
-            //    const ranks = new Set();
+            questionGroups.forEach(group => {
+                const selects = group.querySelectorAll('.response-select');
+                const ranks = new Set();
                 
-            //    selects.forEach(select => {
-            //        const value = select.value;
-            //        if (value === "") {
-            //            isValid = false; // Not all responses have been ranked
-            //        } else if (ranks.has(value)) {
-            //            isValid = false; // Duplicate rank found within the question group
-            //        } else {
-            //            ranks.add(value);
-            //        }
-            //    });
-            //});
+                selects.forEach(select => {
+                    const value = select.value;
+                    if (value === "") {
+                        isValid = false; // Not all responses have been ranked
+                    } else if (ranks.has(value)) {
+                        isValid = false; // Duplicate rank found within the question group
+                    } else {
+                        ranks.add(value);
+                    }
+                });
+            });
 
             if (isValid) {
                 // Here we send the data to Web3Forms
