@@ -126,7 +126,7 @@
             group.querySelectorAll('.response-select').forEach(select => {
                 select.querySelectorAll('option').forEach(option => {
                     if (option.value !== '') { // Skip the placeholder option
-                        option.disabled = selectedValues.has(option.value) && option.value !== select.value;
+                        option.disabled = selectedValues.has(option.value);
                     }
                 });
             });
