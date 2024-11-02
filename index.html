@@ -94,7 +94,7 @@
                     `;
                 }
 
-            questionHTML += `</div>`;
+                questionHTML += `</div>`;
             }
             questionContainer.innerHTML = questionHTML;
 
@@ -112,23 +112,17 @@
         }
 
         // Only display options not slected yet
-        function updateDropdowns(group) {
-            const selectedValues = new Set();
+        function updateDropdowns(select, group) {
+            const selectedValue = select.value;
 
-            // Collect all selected values in the current group
-            group.querySelectorAll('.response-select').forEach(select => {
-                if (select.value) {
-                    selectedValues.add(select.value);
+            group.querySelectorAll('.response-select').forEach(otherSelect => {
+                if (otherSelect !== select) {
+                    const options = otherSelect.querySelectorAll('option');
+                    options.forEach(option => {
+                        // Disable the option if it's already selected in another dropdown
+                        option.disabled = selectedValue && option.value === selectedValue;
+                    });
                 }
-            });
-
-            // Update the options for each dropdown in the group
-            group.querySelectorAll('.response-select').forEach(select => {
-                select.querySelectorAll('option').forEach(option => {
-                    if (option.value !== '') { // Skip the placeholder option
-                        option.disabled = selectedValues.has(option.value);
-                    }
-                });
             });
         }
 
